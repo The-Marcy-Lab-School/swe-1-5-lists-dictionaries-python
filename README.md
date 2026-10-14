@@ -350,6 +350,10 @@ name, so a change through either name shows up in both.
 Copying the dictionary is not enough on its own either. The list inside it
 would still be shared. Can you see why?
 
+The test for this one checks that what comes back is a **different object**
+from what went in, not just that the contents look right. A version that
+hands back the same dictionary under a new name will fail it.
+
 ### Question 15: `set_first_letter`
 
 `set_first_letter` should replace the first letter of a word. It raises a
