@@ -25,6 +25,8 @@ function changes what it was given.
   - [Question 12: `get_first_item`](#question-12-get_first_item)
   - [Question 13: `we_are_not_friends`](#question-13-we_are_not_friends)
   - [Question 14: `add_hobby`](#question-14-add_hobby)
+  - [Question 15: `set_first_letter`](#question-15-set_first_letter)
+  - [Question 16: `group_by_location`](#question-16-group_by_location)
 - [Submitting](#submitting)
 - [Good luck!](#good-luck)
 
@@ -122,8 +124,9 @@ add_to_front_or_back(items, "d", False)
 ```
 
 This function **changes the list it was given**, which is why it returns
-nothing. There are two list methods here, one for each end. Can you find
-both?
+nothing. There are two list methods here, one for each end. Can you find both
+in the
+[list methods reference](https://www.w3schools.com/python/python_lists_methods.asp)?
 
 ### Question 2: `insert_into_middle`
 
@@ -300,7 +303,9 @@ count_by_owner({"Ada": ["cat", "dog"], "Zo": ["newt"]})
 ```
 
 Rewrite the loop so it takes the key and the value together in one step.
-There is a dictionary method that hands you both.
+There is a dictionary method that hands you both — the
+[dictionary methods reference](https://www.w3schools.com/python/python_dictionaries_methods.asp)
+lists all of them.
 
 ## Debug
 
@@ -344,6 +349,49 @@ name, so a change through either name shows up in both.
 
 Copying the dictionary is not enough on its own either. The list inside it
 would still be shared. Can you see why?
+
+### Question 15: `set_first_letter`
+
+`set_first_letter` should replace the first letter of a word. It raises a
+`TypeError`. The function right above it, `set_first_item`, does the same
+thing to a list and works fine.
+
+```python
+set_first_item(["a", "b", "c"], "z")
+# ["z", "b", "c"] — the list took the new value
+set_first_letter("ada", "A")
+# TypeError: 'str' object does not support item assignment
+```
+
+Fix `set_first_letter` so it returns `"Ada"`. Leave `set_first_item` alone.
+
+A list is **mutable**, so `items[0] = value` changes it in place. A string is
+**immutable**, so there is no such thing as changing one. You build a new
+string instead, out of the letter you want and a slice of the rest.
+
+```py
+word[1:]   # every character from position 1 onward
+```
+
+The tests check the word you passed in is unchanged afterward, which it will
+be — an immutable value cannot be anything else.
+
+### Question 16: `group_by_location`
+
+`group_by_location` counts how many people live in each city and country
+pair. It raises a `TypeError`.
+
+```text
+TypeError: unhashable type: 'list'
+```
+
+A dictionary key has to be **hashable**, which means Python can work out a
+fixed number for it and trust that number never changes. A list fails that
+test, because anything you append would change it after it had already been
+filed away under the old number. Strings, numbers and tuples all pass.
+
+The fix is one character on each side. Which finished-and-unchangeable
+collection did you meet back in the point questions?
 
 ## Submitting
 
