@@ -3,7 +3,7 @@ from modify import clear_list, count_by_owner, have_birthday
 TEST_SUITE_NAME = "Modify Tests"
 
 
-def test_clear_list_is_pure():
+def test_clear_list_leaves_the_original_alone():
     """clear_list - returns an empty list and leaves the original alone"""
     items = ["a", "b", "c"]
     assert clear_list(items) == []

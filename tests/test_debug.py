@@ -26,7 +26,7 @@ def test_we_are_not_friends():
     assert we_are_not_friends({"name": "Lonely", "friends": []}) is None
 
 
-def test_add_hobby_is_pure():
+def test_add_hobby_leaves_the_original_alone():
     """add_hobby - returns a new person and leaves the original alone"""
     person = {"name": "Sara", "hobbies": ["hiking"]}
     updated = add_hobby(person, "biking")

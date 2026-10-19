@@ -3,7 +3,7 @@
 Practice storing collections of data, reaching into them, and knowing when a
 function changes what it was given.
 
-**Practicing:** lists, dictionaries, references, pure and impure functions
+**Practicing:** lists, dictionaries, references, copying
 
 - [AI Use on This Assignment](#ai-use-on-this-assignment)
 - [Setup](#setup)
@@ -275,8 +275,8 @@ clear_list(items)
 # items is still ["a", "b", "c"] — the caller's list is untouched
 ```
 
-A function that leaves its input alone is called **pure**. Making an impure
-function pure is usually one line: copy first, then work on the copy.
+Making a function leave its input alone is usually one line: copy first, then
+work on the copy.
 
 ### Question 10: `have_birthday`
 
