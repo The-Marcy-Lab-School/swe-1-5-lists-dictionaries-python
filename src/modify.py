@@ -1,15 +1,11 @@
-def clear_list(items):
-    items.clear()
-    return items
+def add_guest(guests, name):
+    guests.append(name)
+    return guests
 
 
-def have_birthday(person):
-    age = person["age"]
-    age = age + 1
-
-
-def count_by_owner(pets):
-    counts = {}
-    for owner in pets.keys():
-        counts[owner] = len(pets[owner])
-    return counts
+def get_passing_students(grades, passing_score):
+    passing = []
+    for name in grades:
+        if grades[name] >= passing_score:
+            passing.append(name)
+    return passing

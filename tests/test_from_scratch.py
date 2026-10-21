@@ -1,3 +1,7 @@
+import ast
+import inspect
+import textwrap
+
 from from_scratch import (
     add_to_front_or_back,
     become_secret_agent,
@@ -6,10 +10,26 @@ from from_scratch import (
     get_next_opponent,
     insert_into_middle,
     is_right_index,
+    total_by_category,
     unpack_point,
 )
 
 TEST_SUITE_NAME = "From Scratch Tests"
+
+
+def unpacks_in(func):
+    """True when a function assigns several names at once, as in x, y = point.
+
+    The function's code is read with Python's ast module rather than searched as
+    text, so a comment that says "x, y = point" does not count as unpacking.
+    """
+    source = textwrap.dedent(inspect.getsource(func))
+    for node in ast.walk(ast.parse(source)):
+        if isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, (ast.Tuple, ast.List)):
+                    return True
+    return False
 
 
 def test_add_to_front_or_back():
@@ -39,21 +59,27 @@ def test_is_right_index():
     assert is_right_index(items, 0, "a") is True
     assert is_right_index(items, 2, "c") is True
     assert is_right_index(items, 1, "c") is False
+    # A position one past the end is a question too, not a crash.
+    assert is_right_index(items, 3, "c") is False
     # A position past the end is a question, not a crash.
     assert is_right_index(items, 9, "c") is False
 
 
 def test_get_all_y_coordinates():
     """get_all_y_coordinates - pulls the second number out of each pair"""
-    assert get_all_y_coordinates([(1, 2), (3, 4)]) == [2, 4]
-    assert get_all_y_coordinates([(0, 0)]) == [0]
+    points = [[1, 2], [3, 4]]
+    assert get_all_y_coordinates(points) == [2, 4]
+    assert points == [[1, 2], [3, 4]], "The points that were passed in must survive."
+    assert get_all_y_coordinates([[0, 0]]) == [0]
     assert get_all_y_coordinates([]) == []
 
 
 def test_unpack_point():
     """unpack_point - unpacks a point into a message"""
-    assert unpack_point((3, 4)) == "x is 3, y is 4"
-    assert unpack_point((0, -2)) == "x is 0, y is -2"
+    assert unpack_point([3, 4]) == "x is 3, y is 4"
+    assert unpack_point([0, -2]) == "x is 0, y is -2"
+    assert unpacks_in(unpack_point), \
+        "Unpack the point into two names, as in first, second = some_pair."
 
 
 def test_cool_greeting():
@@ -85,4 +111,18 @@ def test_get_next_opponent():
         ],
     }
     assert get_next_opponent(fighters) == "Dunkaroos"
+    rockets = {"name": "Rockets", "matches": [{"team_name": "Fighters", "skill": 7}]}
+    assert get_next_opponent(rockets) == "Fighters"
     assert get_next_opponent({"name": "Lonely", "matches": []}) is None
+
+
+def test_total_by_category():
+    """total_by_category - adds up the amounts in each category"""
+    expenses = [
+        {"category": "food", "amount": 12.50},
+        {"category": "rent", "amount": 900},
+        {"category": "food", "amount": 8.25},
+    ]
+    assert total_by_category(expenses) == {"food": 20.75, "rent": 900}
+    assert total_by_category([{"category": "fun", "amount": 5}]) == {"fun": 5}
+    assert total_by_category([]) == {}

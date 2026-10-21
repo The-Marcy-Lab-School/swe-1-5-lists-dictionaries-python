@@ -1,27 +1,45 @@
-from modify import clear_list, count_by_owner, have_birthday
+import ast
+import inspect
+import textwrap
+
+from modify import add_guest, get_passing_students
 
 TEST_SUITE_NAME = "Modify Tests"
 
 
-def test_clear_list_leaves_the_original_alone():
-    """clear_list - returns an empty list and leaves the original alone"""
-    items = ["a", "b", "c"]
-    assert clear_list(items) == []
-    assert items == ["a", "b", "c"], "The list that was passed in must survive."
+def methods_called_in(func):
+    """The names of the methods a function calls, such as "items" for grades.items().
+
+    The function's code is read with Python's ast module rather than searched as
+    text, so words in comments and strings never count. A comment that says
+    "use .items() here" does not count as calling .items().
+    """
+    source = textwrap.dedent(inspect.getsource(func))
+    methods = set()
+    for node in ast.walk(ast.parse(source)):
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            methods.add(node.func.attr)
+    return methods
 
 
-def test_have_birthday():
-    """have_birthday - adds one to the age inside the dictionary"""
-    person = {"name": "Sara", "age": 30}
-    assert have_birthday(person) is None
-    assert person["age"] == 31
+def test_add_guest_leaves_the_original_alone():
+    """add_guest - returns a new guest list and leaves the original alone"""
+    friday = ["Ada", "Zo"]
+    saturday = add_guest(friday, "Maya")
 
-    have_birthday(person)
-    assert person["age"] == 32
+    assert saturday == ["Ada", "Zo", "Maya"]
+    assert friday == ["Ada", "Zo"], "The list that was passed in must survive."
+    assert saturday is not friday
+    assert add_guest([], "Ada") == ["Ada"]
 
 
-def test_count_by_owner():
-    """count_by_owner - counts each owner's pets using items()"""
-    pets = {"Ada": ["cat", "dog"], "Zo": ["newt"]}
-    assert count_by_owner(pets) == {"Ada": 2, "Zo": 1}
-    assert count_by_owner({}) == {}
+def test_get_passing_students_uses_items():
+    """get_passing_students - returns the passing names, using .items() in the loop"""
+    grades = {"Ada": 92, "Zo": 61, "Maya": 75}
+    assert get_passing_students(grades, 70) == ["Ada", "Maya"]
+    assert get_passing_students(grades, 75) == ["Ada", "Maya"]
+    assert get_passing_students(grades, 100) == []
+    assert get_passing_students({}, 70) == []
+
+    assert "items" in methods_called_in(get_passing_students), \
+        "Rewrite the loop so that .items() hands you each name and score together."

@@ -3,7 +3,7 @@
 Practice storing collections of data, reaching into them, and knowing when a
 function changes what it was given.
 
-**Practicing:** lists, dictionaries, references, copying
+**Practicing:** lists, dictionaries, records, lookup tables, references, copying
 
 - [AI Use on This Assignment](#ai-use-on-this-assignment)
 - [Setup](#setup)
@@ -17,16 +17,14 @@ function changes what it was given.
   - [Question 6: `cool_greeting`](#question-6-cool_greeting)
   - [Question 7: `become_secret_agent`](#question-7-become_secret_agent)
   - [Question 8: `get_next_opponent`](#question-8-get_next_opponent)
+  - [Question 9: `total_by_category`](#question-9-total_by_category)
 - [Modify](#modify)
-  - [Question 9: `clear_list`](#question-9-clear_list)
-  - [Question 10: `have_birthday`](#question-10-have_birthday)
-  - [Question 11: `count_by_owner`](#question-11-count_by_owner)
+  - [Question 10: `add_guest`](#question-10-add_guest)
+  - [Question 11: `get_passing_students`](#question-11-get_passing_students)
 - [Debug](#debug)
   - [Question 12: `get_first_item`](#question-12-get_first_item)
   - [Question 13: `we_are_not_friends`](#question-13-we_are_not_friends)
-  - [Question 14: `add_hobby`](#question-14-add_hobby)
-  - [Question 15: `set_first_letter`](#question-15-set_first_letter)
-  - [Question 16: `group_by_location`](#question-16-group_by_location)
+  - [Question 14: `change_email`](#question-14-change_email)
 - [Submitting](#submitting)
 - [Good luck!](#good-luck)
 
@@ -101,9 +99,9 @@ of that is the new material. If any of it still feels shaky, take time to
 study it first, because fighting the syntax and a new idea at once is twice as
 hard.
 
-Every question here either **changes the collection it was given** or **hands
-back something new**, and the tests check which. **Read each question for
-which one it wants before you write anything.**
+Every question that works with a collection either **changes the collection
+it was given** or **hands back something new**, and the tests check which.
+**Read each question for which one it wants before you write anything.**
 
 ## From Scratch
 
@@ -169,13 +167,13 @@ Write a function `get_all_y_coordinates` that takes a list of points and
 returns a **new** list of just the second number from each.
 
 ```python
-get_all_y_coordinates([(1, 2), (3, 4)])
+get_all_y_coordinates([[1, 2], [3, 4]])
 # [2, 4] — the second number of each pair
 get_all_y_coordinates([])
 # [] — nothing in, nothing out
 ```
 
-Each point is a small collection inside a bigger one, so you are reaching two
+Each point is a small list inside a bigger one, so you are reaching two
 levels down: once for the point, once for the number inside it.
 
 ### Question 5: `unpack_point`
@@ -184,21 +182,18 @@ Write a function `unpack_point` that takes one point and returns a sentence
 about it.
 
 ```python
-unpack_point((3, 4))
+unpack_point([3, 4])
 # "x is 3, y is 4"
-unpack_point((0, -2))
+unpack_point([0, -2])
 # "x is 0, y is -2"
 ```
 
 You could reach in by position twice. Instead, **unpack** it: Python can
-assign several names at once from one collection.
+assign several names at once from one list.
 
 ```py
 first, second = some_pair
 ```
-
-A point is a **tuple** rather than a list, which is Python's way of saying
-this collection is finished and nobody should be adding to it.
 
 ### Question 6: `cool_greeting`
 
@@ -220,7 +215,7 @@ caller can hand it a bigger dictionary without anything breaking.
 ### Question 7: `become_secret_agent`
 
 Write a function `become_secret_agent` that takes a `person` dictionary and a
-`spy_handle` string. It removes the `name` key entirely and adds a
+`spy_handle` string. It removes the `"name"` key entirely and adds a
 `spy_handle` key. It changes the dictionary and returns nothing.
 
 ```python
@@ -259,55 +254,76 @@ The value you want is nested three deep: a dictionary, holding a list,
 holding more dictionaries. Take it one step at a time and print what you have
 as you go.
 
+### Question 9: `total_by_category`
+
+Write a function `total_by_category` that takes a list of expense records and
+returns a **new** dictionary that maps each category to the total amount spent
+in it.
+
+```python
+expenses = [
+    {"category": "food", "amount": 12.50},
+    {"category": "rent", "amount": 900},
+    {"category": "food", "amount": 8.25},
+    {"category": "rent", "amount": 100},
+]
+
+total_by_category(expenses)
+# {"food": 20.75, "rent": 1000 }
+total_by_category([])
+# {} — no expenses, so no categories
+```
+
+`expenses` is a list of records: every expense has the same two keys. The
+dictionary you return is a lookup table: every key is a category, and every
+value is that category's total.
+
+Start with an empty dictionary. The first time a category appears, it is not a
+key yet, so think about which way of reading a value can handle a missing key.
+
 ## Modify
 
-Change the three functions already in `src/modify.py`.
+Change the two functions already in `src/modify.py`.
 
-### Question 9: `clear_list`
+### Question 10: `add_guest`
 
-`clear_list` empties the list it was given and hands it back. Change it so
-the caller's list survives.
-
-```python
-items = ["a", "b", "c"]
-clear_list(items)
-# returns [] — an empty list
-# items is still ["a", "b", "c"] — the caller's list is untouched
-```
-
-Making a function leave its input alone is usually one line: copy first, then
-work on the copy.
-
-### Question 10: `have_birthday`
-
-`have_birthday` should add one to the person's age. It currently does nothing
-at all.
-
-Do the following:
-
-- Work out why the current version has no effect, even though it looks like it
-  adds one.
-- Fix it so the dictionary it was given actually changes.
-
-Hint: *Be careful about pulling a value out into its own variable before you
-change it.*
-
-### Question 11: `count_by_owner`
-
-`count_by_owner` counts how many pets each owner has. It works, but it looks
-up every value a second time after already having the key.
+`add_guest` should return a guest list with one more name on it. It returns
+the right list, but it also adds the name to the list it was given.
 
 ```python
-count_by_owner({"Ada": ["cat", "dog"], "Zo": ["newt"]})
-# {"Ada": 2, "Zo": 1}
+friday = ["Ada", "Zo"]
+saturday = add_guest(friday, "Maya")
+# saturday is ["Ada", "Zo", "Maya"] — correct
+# friday is ALSO ["Ada", "Zo", "Maya"] — wrong, Maya was only invited on Saturday
 ```
 
-Rewrite the loop so it takes the key and the value together in one step.
-There is a dictionary method that hands you both — the
-[dictionary methods reference](https://www.w3schools.com/python/python_dictionaries_methods.asp)
-lists all of them.
+Change `add_guest` so that `friday` stays `["Ada", "Zo"]`. Making a function
+leave its input alone is usually one line: copy first, then work on the copy.
+
+The test checks that what comes back is a **different list** from the one that
+went in, not just that the names look right.
+
+### Question 11: `get_passing_students`
+
+`get_passing_students` takes a `grades` dictionary and a `passing_score`, and
+returns the names of every student whose score is at least `passing_score`.
+
+```python
+grades = {"Ada": 92, "Zo": 61, "Maya": 75}
+get_passing_students(grades, 70)
+# ["Ada", "Maya"] — Zo's 61 is below 70
+```
+
+`grades` is a lookup table: every key is a student, and every value is that
+student's score. The function works, but its loop is handed only each name, so
+it has to look up the score again with `grades[name]`.
+
+Rewrite the loop with `.items()`, so that the loop hands you each name and its
+score together. The tests check that your loop uses `.items()`.
 
 ## Debug
+
+Fix the three functions in `src/debug.py`.
 
 ### Question 12: `get_first_item`
 
@@ -332,70 +348,20 @@ we_are_not_friends(person)
 
 Two things to fix, and the tests check both.
 
-### Question 14: `add_hobby`
+### Question 14: `change_email`
 
-`add_hobby` should return a person with the new hobby added, leaving the
-original alone. It changes the original too.
-
-```python
-person = {"name": "Sara", "hobbies": ["hiking"]}
-updated = add_hobby(person, "biking")
-# updated["hobbies"] is ["hiking", "biking"] — correct
-# person["hobbies"] is ALSO ["hiking", "biking"] — wrong, it should be ["hiking"]
-```
-
-`updated = person` does not make a copy. It gives the same dictionary a second
-name, so a change through either name shows up in both.
-
-Copying the dictionary is not enough on its own either. The list inside it
-would still be shared. Can you see why?
-
-The test for this one checks that what comes back is a **different object**
-from what went in, not just that the contents look right. A version that
-hands back the same dictionary under a new name will fail it.
-
-### Question 15: `set_first_letter`
-
-`set_first_letter` should replace the first letter of a word. It raises a
-`TypeError`. The function right above it, `set_first_item`, does the same
-thing to a list and works fine.
+`change_email` should return a copy of an account with a new email, and leave
+the original account alone. However, it currently changes the original too.
 
 ```python
-set_first_item(["a", "b", "c"], "z")
-# ["z", "b", "c"] — the list took the new value
-set_first_letter("ada", "A")
-# TypeError: 'str' object does not support item assignment
+account = {"name": "Ada", "email": "ada@old.com"}
+updated = change_email(account, "ada@new.com")
+# updated["email"] is "ada@new.com" — correct
+# account["email"] is ALSO "ada@new.com" — wrong, it should still be "ada@old.com"
 ```
 
-Fix `set_first_letter` so it returns `"Ada"`. Leave `set_first_item` alone.
-
-A list is **mutable**, so `items[0] = value` changes it in place. A string is
-**immutable**, so there is no such thing as changing one. You build a new
-string instead, out of the letter you want and a slice of the rest.
-
-```py
-word[1:]   # every character from position 1 onward
-```
-
-The tests check the word you passed in is unchanged afterward, which it will
-be — an immutable value cannot be anything else.
-
-### Question 16: `group_by_location`
-
-`group_by_location` counts how many people live in each city and country
-pair. It raises a `TypeError`.
-
-```text
-TypeError: unhashable type: 'list'
-```
-
-A dictionary key has to be **hashable**, which means Python can work out a
-fixed number for it and trust that number never changes. A list fails that
-test, because anything you append would change it after it had already been
-filed away under the old number. Strings, numbers and tuples all pass.
-
-The fix is one character on each side. Which finished-and-unchangeable
-collection did you meet back in the point questions?
+The test checks that what comes back is a **different dictionary** from the
+one that went in, not just that the email in the returned record looks right.
 
 ## Submitting
 

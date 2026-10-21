@@ -28,3 +28,7 @@ def become_secret_agent(person, spy_handle):
 
 def get_next_opponent(team):
     pass
+
+
+def total_by_category(expenses):
+    pass
