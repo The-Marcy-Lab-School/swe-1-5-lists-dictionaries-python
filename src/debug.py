@@ -1,5 +1,9 @@
-def get_first_item(items):
-    return items[0]
+def count_votes(ballots):
+    counts = {}
+    for ballot in ballots:
+        choice = ballot["choice"]
+        counts[choice] += 1
+    return counts
 
 
 def we_are_not_friends(person):

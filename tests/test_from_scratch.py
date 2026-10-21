@@ -85,12 +85,12 @@ def test_unpack_point():
 def test_cool_greeting():
     """cool_greeting - reads only the keys it needs"""
     assert cool_greeting({"name": "Sara", "is_cool": True}) == \
-        "What is UP SARA? How you been doin'?"
+        "What is UP SARA? How you doin'?"
     assert cool_greeting({"name": "Bob", "is_cool": False}) == \
         "Greetings Bob, how have you been lately?"
     # Extra keys are none of this function's business.
     assert cool_greeting({"name": "Zo", "is_cool": True, "age": 30}) == \
-        "What is UP ZO? How you been doin'?"
+        "What is UP ZO? How you doin'?"
 
 
 def test_become_secret_agent():

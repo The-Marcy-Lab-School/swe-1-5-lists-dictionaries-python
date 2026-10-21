@@ -1,13 +1,18 @@
-from debug import change_email, get_first_item, we_are_not_friends
+from debug import change_email, count_votes, we_are_not_friends
 
 TEST_SUITE_NAME = "Debug Tests"
 
 
-def test_get_first_item():
-    """get_first_item - returns the first item, or None when there is none"""
-    assert get_first_item(["a", "b"]) == "a"
-    assert get_first_item([1]) == 1
-    assert get_first_item([]) is None
+def test_count_votes():
+    """count_votes - counts how many votes each choice got"""
+    ballots = [
+        {"voter": "Ada", "choice": "pizza"},
+        {"voter": "Zo", "choice": "tacos"},
+        {"voter": "Maya", "choice": "pizza"},
+    ]
+    assert count_votes(ballots) == {"pizza": 2, "tacos": 1}
+    assert count_votes([{"voter": "Bo", "choice": "salad"}]) == {"salad": 1}
+    assert count_votes([]) == {}
 
 
 def test_we_are_not_friends():

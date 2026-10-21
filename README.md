@@ -90,9 +90,13 @@ deactivate
 
 This assignment has three sections:
 
-1. From Scratch
+1. Debug
 2. Modify
-3. Debug
+3. From Scratch
+
+Debug and Modify come first as a warm-up. Each of those questions starts from
+code that is already written, so you change a line or two instead of writing a
+function from nothing.
 
 You will write functions that take parameters, return values, and loop. None
 of that is the new material. If any of it still feels shaky, take time to
@@ -103,11 +107,103 @@ Every question that works with a collection either **changes the collection
 it was given** or **hands back something new**, and the tests check which.
 **Read each question for which one it wants before you write anything.**
 
+## Debug
+
+Fix the three functions in `src/debug.py`.
+
+### Question 1: `count_votes`
+
+`count_votes` takes a list of ballot records and should return a lookup table
+that maps each lunch choice to the number of votes it got. It raises a
+`KeyError` on the first ballot instead.
+
+```python
+ballots = [
+    {"voter": "Ada", "choice": "pizza"},
+    {"voter": "Zo", "choice": "tacos"},
+    {"voter": "Maya", "choice": "pizza"},
+]
+count_votes(ballots)
+# want {"pizza": 2, "tacos": 1}
+# KeyError: 'pizza'
+```
+
+Read the error message. Which key is missing, and why is it missing the first
+time a choice appears?
+
+### Question 2: `we_are_not_friends`
+
+`we_are_not_friends` should remove and return the **last** friend. It removes
+the first one, and raises an `IndexError` when there are no friends at all.
+
+```python
+person = {"name": "Sara", "friends": ["Bob", "Joe", "Sally"]}
+we_are_not_friends(person)
+# want "Sally", gets "Bob"
+```
+
+Two things to fix, and the tests check both.
+
+### Question 3: `change_email`
+
+`change_email` should return a copy of an account with a new email, and leave
+the original account alone. However, it currently changes the original too.
+
+```python
+account = {"name": "Ada", "email": "ada@old.com"}
+updated = change_email(account, "ada@new.com")
+# updated["email"] is "ada@new.com" — correct
+# account["email"] is ALSO "ada@new.com" — wrong, it should still be "ada@old.com"
+```
+
+The test checks that what comes back is a **different dictionary** from the
+one that went in, not just that the email in the returned record looks right.
+
+## Modify
+
+Change the two functions already in `src/modify.py`.
+
+### Question 4: `add_guest`
+
+`add_guest` should return a guest list with one more name on it. It returns
+the right list, but it also adds the name to the list it was given.
+
+```python
+friday = ["Ada", "Zo"]
+saturday = add_guest(friday, "Maya")
+# saturday is ["Ada", "Zo", "Maya"] — correct
+# friday is ALSO ["Ada", "Zo", "Maya"] — wrong, Maya was only invited on Saturday
+```
+
+Change `add_guest` so that `friday` stays `["Ada", "Zo"]`. Making a function
+leave its input alone is usually one line: copy first, then work on the copy.
+
+The test checks that what comes back is a **different list** from the one that
+went in, not just that the names look right.
+
+### Question 5: `get_passing_students`
+
+`get_passing_students` takes a `grades` dictionary and a `passing_score`, and
+returns the names of every student whose score is at least `passing_score`.
+
+```python
+grades = {"Ada": 92, "Zo": 61, "Maya": 75}
+get_passing_students(grades, 70)
+# ["Ada", "Maya"] — Zo's 61 is below 70
+```
+
+`grades` is a lookup table: every key is a student, and every value is that
+student's score. The function works, but its loop is handed only each name, so
+it has to look up the score again with `grades[name]`.
+
+Rewrite the loop with `.items()`, so that the loop hands you each name and its
+score together. The tests check that your loop uses `.items()`.
+
 ## From Scratch
 
 Write your solutions in `src/from_scratch.py`.
 
-### Question 1: `add_to_front_or_back`
+### Question 6: `add_to_front_or_back`
 
 Write a function `add_to_front_or_back` that takes a list `items`, a `value`,
 and a boolean `to_front`. It should add the value to the front when
@@ -126,7 +222,7 @@ nothing. There are two list methods here, one for each end. Can you find both
 in the
 [list methods reference](https://www.w3schools.com/python/python_lists_methods.asp)?
 
-### Question 2: `insert_into_middle`
+### Question 7: `insert_into_middle`
 
 Write a function `insert_into_middle` that takes a list `items` and a `value`,
 and puts the value in the middle. It returns nothing.
@@ -143,7 +239,7 @@ insert_into_middle(odd, "x")
 An odd-length list has no exact middle. Work out from the two examples which
 way this one rounds, then find the division that does it in one step.
 
-### Question 3: `is_right_index`
+### Question 8: `is_right_index`
 
 Write a function `is_right_index` that takes a list `items`, an `index`, and a
 `value`. It returns `True` when that position holds that value.
@@ -161,7 +257,7 @@ is_right_index(items, 9, "c")
 That last case is the whole question. Reaching for a position that does not
 exist raises an `IndexError`, so check before you reach.
 
-### Question 4: `get_all_y_coordinates`
+### Question 9: `get_all_y_coordinates`
 
 Write a function `get_all_y_coordinates` that takes a list of points and
 returns a **new** list of just the second number from each.
@@ -176,7 +272,7 @@ get_all_y_coordinates([])
 Each point is a small list inside a bigger one, so you are reaching two
 levels down: once for the point, once for the number inside it.
 
-### Question 5: `unpack_point`
+### Question 10: `unpack_point`
 
 Write a function `unpack_point` that takes one point and returns a sentence
 about it.
@@ -195,24 +291,24 @@ assign several names at once from one list.
 first, second = some_pair
 ```
 
-### Question 6: `cool_greeting`
+### Question 11: `cool_greeting`
 
 Write a function `cool_greeting` that takes a `person` dictionary and returns
 a greeting that depends on the `is_cool` key.
 
 ```python
-cool_greeting({"name": "Sara", "is_cool": True})
-# "What is UP SARA? How you been doin'?" — the cool version shouts the name
 cool_greeting({"name": "Bob", "is_cool": False})
 # "Greetings Bob, how have you been lately?"
+cool_greeting({"name": "Sara", "is_cool": True})
+# "What is UP SARA? How you doin'?" — the cool version shouts the name
 cool_greeting({"name": "Zo", "is_cool": True, "age": 30})
-# "What is UP ZO? How you been doin'?" — the extra key is ignored
+# "What is UP ZO? How you doin'?" — the extra key is ignored
 ```
 
 That third case matters. A function should read only the keys it needs, so a
 caller can hand it a bigger dictionary without anything breaking.
 
-### Question 7: `become_secret_agent`
+### Question 12: `become_secret_agent`
 
 Write a function `become_secret_agent` that takes a `person` dictionary and a
 `spy_handle` string. It removes the `"name"` key entirely and adds a
@@ -229,7 +325,7 @@ you are stuck, ask your AI tutor in **tutor mode** how removing a key differs
 from blanking its value. Make it explain the idea rather than hand you the
 line.
 
-### Question 8: `get_next_opponent`
+### Question 13: `get_next_opponent`
 
 Write a function `get_next_opponent` that takes a `team` dictionary and
 returns the `team_name` of the first match, or `None` when there are no
@@ -254,7 +350,7 @@ The value you want is nested three deep: a dictionary, holding a list,
 holding more dictionaries. Take it one step at a time and print what you have
 as you go.
 
-### Question 9: `total_by_category`
+### Question 14: `total_by_category`
 
 Write a function `total_by_category` that takes a list of expense records and
 returns a **new** dictionary that maps each category to the total amount spent
@@ -281,87 +377,8 @@ value is that category's total.
 Start with an empty dictionary. The first time a category appears, it is not a
 key yet, so think about which way of reading a value can handle a missing key.
 
-## Modify
-
-Change the two functions already in `src/modify.py`.
-
-### Question 10: `add_guest`
-
-`add_guest` should return a guest list with one more name on it. It returns
-the right list, but it also adds the name to the list it was given.
-
-```python
-friday = ["Ada", "Zo"]
-saturday = add_guest(friday, "Maya")
-# saturday is ["Ada", "Zo", "Maya"] — correct
-# friday is ALSO ["Ada", "Zo", "Maya"] — wrong, Maya was only invited on Saturday
-```
-
-Change `add_guest` so that `friday` stays `["Ada", "Zo"]`. Making a function
-leave its input alone is usually one line: copy first, then work on the copy.
-
-The test checks that what comes back is a **different list** from the one that
-went in, not just that the names look right.
-
-### Question 11: `get_passing_students`
-
-`get_passing_students` takes a `grades` dictionary and a `passing_score`, and
-returns the names of every student whose score is at least `passing_score`.
-
-```python
-grades = {"Ada": 92, "Zo": 61, "Maya": 75}
-get_passing_students(grades, 70)
-# ["Ada", "Maya"] — Zo's 61 is below 70
-```
-
-`grades` is a lookup table: every key is a student, and every value is that
-student's score. The function works, but its loop is handed only each name, so
-it has to look up the score again with `grades[name]`.
-
-Rewrite the loop with `.items()`, so that the loop hands you each name and its
-score together. The tests check that your loop uses `.items()`.
-
-## Debug
-
-Fix the three functions in `src/debug.py`.
-
-### Question 12: `get_first_item`
-
-`get_first_item` should return the first item, or `None` when the list is
-empty. It raises an `IndexError` on an empty list instead.
-
-```python
-get_first_item(["a", "b"])   # "a"
-get_first_item([])           # IndexError, want None
-```
-
-### Question 13: `we_are_not_friends`
-
-`we_are_not_friends` should remove and return the **last** friend. It removes
-the first one, and raises an `IndexError` when there are no friends at all.
-
-```python
-person = {"name": "Sara", "friends": ["Bob", "Joe", "Sally"]}
-we_are_not_friends(person)
-# want "Sally", gets "Bob"
-```
-
-Two things to fix, and the tests check both.
-
-### Question 14: `change_email`
-
-`change_email` should return a copy of an account with a new email, and leave
-the original account alone. However, it currently changes the original too.
-
-```python
-account = {"name": "Ada", "email": "ada@old.com"}
-updated = change_email(account, "ada@new.com")
-# updated["email"] is "ada@new.com" — correct
-# account["email"] is ALSO "ada@new.com" — wrong, it should still be "ada@old.com"
-```
-
-The test checks that what comes back is a **different dictionary** from the
-one that went in, not just that the email in the returned record looks right.
+`count_votes` in Question 1 builds a lookup table the same way. If you get
+stuck, look back at how you fixed it.
 
 ## Submitting
 
