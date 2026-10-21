@@ -269,7 +269,7 @@ expenses = [
 ]
 
 total_by_category(expenses)
-# {"food": 20.75, "rent": 1000 }
+# {"food": 20.75, "rent": 1000}
 total_by_category([])
 # {} — no expenses, so no categories
 ```
